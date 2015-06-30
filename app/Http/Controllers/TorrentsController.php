@@ -27,13 +27,19 @@ class TorrentsController extends Controller
      * 
      * @return [array] [torrents]
      */ 
-    public function index()
+    public function index(Request $request)
     {
-
-        /*scope au besoin pour classer*/
-        $torrents = Torrent::latest('created_at')->get();
-
-        return view('torrents.index', compact('torrents'));
+        // Check if user has sent a search query
+        $input = $request->input('q');
+        if($input) {
+            // Use the Elasticquent search method to search ElasticSearch
+            $torrents = Torrent::search($input);
+        } else {
+            // Show all posts if no query is set
+            $torrents = Torrent::latest('created_at')->get();
+        }
+        
+        return view('torrents.index',compact('torrents'));
     }
 
     /**

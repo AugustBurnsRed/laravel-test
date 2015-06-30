@@ -18,6 +18,12 @@
       <ul class="nav navbar-nav  navbar-right">
         <li>{!! link_to_action('TorrentsController@show', $latest->title, [$latest->id]) !!}</li>
       </ul>
+      <div class="navbar-form navbar-right">
+        {!! Form::open(['method' => 'get', 'action' => ['TorrentsController@search']])  !!}
+          {!! Form::input('', 'q', Input::get('recherche', ''))!!}
+          {!! Form::submit('Filter results') !!}
+        {!! Form:: close() !!}
+      </div>
     </div>
   </div>
 </nav>

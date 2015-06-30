@@ -15,6 +15,9 @@ Route::get('torrents/ajouter', 'TorrentsController@create');
 //Route::get('torrents/{id}/éditer', 'TorrentsController@edit');
 //Route::post('torrents','TorrentsController@store');
 
+/*recherche*/
+//Route::get('torrents/recherche', ['as' => 'search', 'uses' => 'TorrentsController@search']);
+Route::get('torrents','TorrentsController@search');
 Route:resource('torrents', 'TorrentsController');
 
 
@@ -35,18 +38,3 @@ Route::get('admin', ['middleware' => 'admin', function()
 
 //tags
 Route::get('tags/{tags}', 'TagsController@show');
-
-/*search*/
-Route::get('/', ['as' => 'search', 'uses' => function() {
-
-  // Check if user has sent a search query
-  if($query = Input::get('query', false)) {
-    // Use the Elasticquent search method to search ElasticSearch
-    $posts = Torrent::search($query);
-  } else {
-    // Show all posts if no query is set
-    $posts = Torrent::all(); 
-  }
-
-return View::make('home', compact('posts'));
-}]);
