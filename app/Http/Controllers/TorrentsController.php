@@ -14,7 +14,6 @@ use Illuminate\Http\Request;
 
 class TorrentsController extends Controller
 {
-
     /**
      * Create a new torrents controller instance.
      */
@@ -64,7 +63,6 @@ class TorrentsController extends Controller
      */
     public function store(TorrentRequest $request)
     {
-
         $this->createTorrent($request);
         
         flash('Votre torrent a été ajouté');
@@ -97,8 +95,10 @@ class TorrentsController extends Controller
 
         $this->syncTags($torrent, $request->input('tag_list'));
 
-        return redirect ('torrents');
+        /*add to elastic*/
+        $torrent->addToIndex();
 
+        return redirect ('torrents');
     }
 
     /**
@@ -123,6 +123,9 @@ class TorrentsController extends Controller
         $torrent = Auth::user()->torrents()->create($request->all());
 
         $this->syncTags($torrent, $request->input('tag_list'));
+
+        /*add to elastic*/
+        $torrent->addToIndex();
 
         return $torrent;
     }

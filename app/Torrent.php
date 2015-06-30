@@ -1,17 +1,30 @@
 <?php
-
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use Elasticquent\ElasticquentTrait;
+
 class Torrent extends Model
 {
+    use ElasticquentTrait;
+
     /*enlever le title quand il va être généré automatiquement*/
     protected $fillable = [
         'title',
         'description',
     ];
 
+    protected $mappingProperties = array(
+        'title' => [
+            'type' => 'string',
+            "analyzer" => "standard",
+        ],
+        'description' => [
+            'type' => 'string',
+            "analyzer" => "standard",
+        ],
+    );
 
     /**
      * A torrent is owned by a user

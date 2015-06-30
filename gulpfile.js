@@ -12,14 +12,28 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function(mix) {
-    mix.sass('app.scss');
+    //mettre tous nos css ensemble avec des import dans app.scss
+    mix.sass('app.scss', 'resources/assets/css');
 
+    //mixer les style externe ensemble
     mix.styles([
-        'vendor/normalize.css',
-        'app.css'
-    ],null,'public/css');
+        'libs/normalize.css',
+        'libs/bootstrap.min.css',
+        'app.css',
+        'libs/select2.min.css',
+    ]);
 
+    //version avec elixir
     mix.version('public/css/all.css');
+
+    mix.scripts([
+        'libs/jquery-2.1.4.min.js',
+        'libs/bootstrap.min.js',
+        'libs/select2.min.js',
+        'alert.js',
+    ]);
+
+
 
     //test for php routes
     //mix.phpUnit();

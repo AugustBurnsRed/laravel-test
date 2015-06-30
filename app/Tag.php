@@ -21,6 +21,6 @@ class Tag extends Model
      */
     public function torrents()
     {
-        return $this->belongsToMane('App\Torrent');
+        return $this->belongsToMany('App\Torrent');
     }
 }

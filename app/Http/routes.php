@@ -1,7 +1,7 @@
 <?php
+use App\Torrent;
 
 /*general pages*/
-
 Route::get('/',function(){
     return 'Home Page';
 });
@@ -31,4 +31,22 @@ Route::controllers([
 Route::get('admin', ['middleware' => 'admin', function()
 {
     return 'this page may only be seen by admin';
+}]);
+
+//tags
+Route::get('tags/{tags}', 'TagsController@show');
+
+/*search*/
+Route::get('/', ['as' => 'search', 'uses' => function() {
+
+  // Check if user has sent a search query
+  if($query = Input::get('query', false)) {
+    // Use the Elasticquent search method to search ElasticSearch
+    $posts = Torrent::search($query);
+  } else {
+    // Show all posts if no query is set
+    $posts = Torrent::all(); 
+  }
+
+return View::make('home', compact('posts'));
 }]);

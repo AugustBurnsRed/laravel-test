@@ -28,7 +28,14 @@ class RouteServiceProvider extends ServiceProvider
 
         parent::boot($router);
 
+        //pas sure si besoin ligne juste en bas
         $router->model('torrents', 'App\Torrent');
+
+        $router->bind('tags', function($name)
+        {
+            return \App\Tag::where('name', $name)->firstOrFail();
+        });
+
     }
 
     /**
