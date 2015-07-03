@@ -1,7 +1,7 @@
 <table class="{{ $class or 'table' }}">
     @if(count($columns))
-	<thead>
-		<tr>
+    <thead>
+        <tr>
         @foreach($columns as $c)
             <th {!! $c->getClasses() ? ' class="' . $c->getClassString() . '"' : '' !!}>
                 @if($c->isSortable())
@@ -21,10 +21,10 @@
             </th>
         @endforeach
 
-		</tr>
-	</thead>
+        </tr>
+    </thead>
     @endif
-	<tbody>
+    <tbody>
         @if(count($rows))
             @foreach($rows as $r)
 
@@ -45,10 +45,10 @@
 
             @endforeach
         @endif
-	</tbody>
+    </tbody>
 </table>
 
 @if(class_basename(get_class($rows)) == 'LengthAwarePaginator')
     {{-- Collection is paginated, so render that --}}
-    {!! $rows->render() !!}
+    {!! with(new App\Steven\CustomVendor\PaginationLinks($rows))->render() !!} 
 @endif

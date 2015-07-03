@@ -12,7 +12,6 @@ use Auth;
 
 use Illuminate\Http\Request;
 use App\Steven\CustomVendor\PaginationLinks as Pagination;
-use Gbrock\Table\Facades\Table as Table;
 
 class TorrentsController extends Controller
 {
@@ -31,14 +30,35 @@ class TorrentsController extends Controller
      */ 
     public function index(Request $request)
     {
-        $rows = Torrent::sorted()->paginate(4);
-        $table = Table::create($rows);
-        return view('torrents.index', ['table' => $table]);
 
+        //variable
+        $perPage = 1;
         $page = $request->input('page');
         if(!$page){$page = 1;}
-        $perPage = 2;
         $skip = ($page*$perPage)-$perPage;
+
+        //tableau
+        
+        $input = $request->input('q');
+        if($input) {
+            $rows = Torrent::where('title', 'LIKE', '%t%')
+                    ->sorted()->paginate($perPage);
+        } else {
+            $rows = Torrent::sorted()->paginate($perPage);
+        }
+        
+        $table = \Table::create($rows,['description']);
+        /*changé nom colomne dans la BD*/
+        $table->addColumn('title', 'Nom', function($model) {
+            return $model->title;
+        });
+        $table->addColumn('created_at', 'Ajouté', function($model) {
+            return $model->created_at->diffForHumans();
+        });
+
+        return view('torrents.index', ['table' => $table]);
+
+        
 
         // Check if user has sent a search query
         $input = $request->input('q');
