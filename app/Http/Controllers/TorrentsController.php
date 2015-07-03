@@ -11,6 +11,8 @@ use App\Tag;
 use Auth;
 
 use Illuminate\Http\Request;
+use App\Steven\CustomVendor\PaginationLinks as Pagination;
+use Gbrock\Table\Facades\Table as Table;
 
 class TorrentsController extends Controller
 {
@@ -29,16 +31,34 @@ class TorrentsController extends Controller
      */ 
     public function index(Request $request)
     {
+        $rows = Torrent::sorted()->paginate(4);
+        $table = Table::create($rows);
+        return view('torrents.index', ['table' => $table]);
+
+        $page = $request->input('page');
+        if(!$page){$page = 1;}
+        $perPage = 2;
+        $skip = ($page*$perPage)-$perPage;
+
         // Check if user has sent a search query
         $input = $request->input('q');
         if($input) {
             // Use the Elasticquent search method to search ElasticSearch
-            $torrents = Torrent::search($input);
+            $torrents = Torrent::searchByQuery([
+                    'multi_match' => [
+                        'query' => $input,
+                        'fields' => ["title^5" , "description"]
+                    ]
+                ],null,null,$perPage,$skip);
+            $total = $torrents->totalHits();
         } else {
             // Show all posts if no query is set
-            $torrents = Torrent::latest('created_at')->get();
+            $total = Torrent::count();
+            $torrents = Torrent::orderBy('created_at', 'desc')->take($perPage)->skip($skip)->get();
+            
         }
         
+        $torrents = $this->generatePagination($request,$page,$perPage,$total,$torrents);
         return view('torrents.index',compact('torrents'));
     }
 
@@ -134,5 +154,14 @@ class TorrentsController extends Controller
         $torrent->addToIndex();
 
         return $torrent;
+    }
+
+    /**
+     * generate the pagination
+     * @return pagination
+     */
+    private function generatePagination(Request $request,$page,$perPage,$total,$content){
+        
+        return $torrents = Pagination::makeLengthAware($content, $total, $perPage )->appends($request->except('page'));
     }
 }

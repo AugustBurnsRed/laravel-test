@@ -16,7 +16,8 @@
         "doctrine/dbal": "^2.6@dev",
         "illuminate/html": "^5.0@dev",
         "laracasts/flash": "dev-master",
-        "fairholm/elasticquent": "dev-feature/laravel-5"
+        "fairholm/elasticquent": "dev-feature/laravel-5",
+        "gbrock/laravel-table": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -32,7 +33,7 @@
             "App\\": "app/"
         },
         "files": [
-           "app/Helpers/NavSecActive.php"
+           "app/Helpers/NavSetActive.php"
         ]
     },
     "autoload-dev": {

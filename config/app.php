@@ -147,6 +147,7 @@ return [
         App\Providers\ViewComposerServiceProvider::class,
 
         Laracasts\Flash\FlashServiceProvider::class,
+        Gbrock\Table\Providers\TableServiceProvider::class,
     ],
 
     /*
@@ -197,6 +198,7 @@ return [
         'Form'      => Illuminate\Html\FormFacade::class,
         'Html'      => Illuminate\Html\HtmlFacade::class,
         'Flash'     => Laracast\Flash\Flash::class,
+        'Table'     => Gbrock\Table\Facades\Table::class,
     ],
 
 ];

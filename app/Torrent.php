@@ -4,10 +4,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 use Elasticquent\ElasticquentTrait;
+use Gbrock\Table\Traits\Sortable;
 
 class Torrent extends Model
 {
-    use ElasticquentTrait;
+    use ElasticquentTrait, Sortable;
 
     /*enlever le title quand il va être généré automatiquement*/
     protected $fillable = [
@@ -26,6 +27,13 @@ class Torrent extends Model
         ],
     );
 
+    /**
+     * The attributes which may be used for sorting dynamically.
+     *
+     * @var array
+     */
+    protected $sortable = ['title', 'created_at'];
+    
     /**
      * A torrent is owned by a user
      *
