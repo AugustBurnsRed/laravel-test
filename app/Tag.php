@@ -19,8 +19,8 @@ class Tag extends Model
      * Get the torrent associated with the given tag.
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function torrents()
+    public function movies()
     {
-        return $this->belongsToMany('App\Torrent');
+        return $this->belongsToMany('App\Movie');
     }
 }

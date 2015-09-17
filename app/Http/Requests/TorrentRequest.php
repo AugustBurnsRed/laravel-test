@@ -25,7 +25,6 @@ class TorrentRequest extends Request
     {
         return [
             'title' => 'required|min:3',
-            'description' => 'required'
         ];
     }
 }

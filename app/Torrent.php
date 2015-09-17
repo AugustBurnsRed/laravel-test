@@ -1,31 +1,19 @@
 <?php
+
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
-use Elasticquent\ElasticquentTrait;
 use Gbrock\Table\Traits\Sortable;
 
 class Torrent extends Model
 {
-    use ElasticquentTrait, Sortable;
+    use Sortable;
 
-    /*enlever le title quand il va être généré automatiquement*/
+    /*enlever le title quand il va être généré automatiquement....pas sûre à tester*/
     protected $fillable = [
-        'title',
-        'description',
+        'movie_id',
+        'serie_id',
     ];
-
-    protected $mappingProperties = array(
-        'title' => [
-            'type' => 'string',
-            "analyzer" => "standard",
-        ],
-        'description' => [
-            'type' => 'string',
-            "analyzer" => "standard",
-        ],
-    );
 
     /**
      * The attributes which may be used for sorting dynamically.
@@ -33,9 +21,9 @@ class Torrent extends Model
      * @var array
      */
     protected $sortable = ['title', 'created_at'];
-    
+
     /**
-     * A torrent is owned by a user
+     * A torrent is owned by a user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -43,28 +31,67 @@ class Torrent extends Model
     {
         return $this->belongsTo('App\User');
     }
-
     /**
-     * A torrent is owned by a user
+     * A torrent belongs to a movie.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    
-    /**
-     * Get the tags associated with the given article.
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function tags()
+    public function movie()
     {
-        return $this->belongsToMany('App\Tag')->withTimestamps();
+        return  $this->belongsTo('App\Movie');
     }
 
     /**
-     * Get a list of tag ids associated with the current article
+     * Search torrents by title.
+     *
+     * @param $query
+     * @param $input
+     *
+     * @return mixed
+     */
+    public function scopeTitle($query, $input)
+    {
+        return $query->with('movie')->where('title', 'LIKE', '%'.$input.'%');
+        /*$result = $query->with('movie')->where('title', 'LIKE', '%' . $input . '%')
+                ->join('movie_tag', 'torrents.movie_id', '=', 'movie_tag.movie_id')
+                ->join('tags', 'movie_tag.tag_id', '=', 'tags.id')->get();*/
+    }
+
+    /**
+     * Search torrents by tags.
+     *
+     * @param $query
+     * @param $tags
+     *
+     * @return mixed
+     */
+    public function scopeTags($query, $tags)
+    {
+        return $query->whereHas('tags', function ($query) use ($tags) {
+          $query->whereIn('name', $tags);
+        });
+    }
+
+    /**
+     * Sort and paginate the query.
+     *
+     * @param $query
+     * @param $perPage
+     *
+     * @return mixed
+     */
+    public function scopeSortAndPaginate($query, $perPage)
+    {
+        return $query->sorted()->paginate($perPage);
+    }
+
+    /**
+     * See all torrent related to this movie.
+     *
      * @return array
      */
-    public function getTagListAttribute()
+    public function scopeTorrentRelatedMovie($query, $movieId)
     {
-        return $this->tags->lists('id')->all();
+        return $query->where('movie_id', '=', $movieId)->get();
     }
 }

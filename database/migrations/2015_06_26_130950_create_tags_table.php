@@ -19,10 +19,10 @@ class CreateTagsTable extends Migration
         });
 
         //singulier et ordre alphabétique
-        Schema::create('tag_torrent', function(Blueprint $table)
+        Schema::create('movie_tag', function(Blueprint $table)
         {
-            $table->integer('torrent_id')->unsigned()->index();//unsigned pour chiffre valeur positive, index plus rapide pour chercher dans BD
-            $table->foreign('torrent_id')->references('id')->on('torrents')->onDelete('cascade');
+            $table->integer('movie_id')->unsigned()->index();//unsigned pour chiffre valeur positive, index plus rapide pour chercher dans BD
+            $table->foreign('movie_id')->references('id')->on('movies')->onDelete('cascade');
 
             $table->integer('tag_id')->unsigned()->index();
             $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
@@ -37,7 +37,7 @@ class CreateTagsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('tag_torrent');
-        Schema::drop('tags'); 
+        Schema::drop('tag_movie');
+        Schema::drop('tags');
     }
 }

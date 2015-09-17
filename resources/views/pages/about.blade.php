@@ -1,8 +1,7 @@
 @extends('app')
 
 @section('content')
-    
-    <h1>About</h1>    
+    <h1>About</h1>
 
     @if (count($people))
         <h3>People I like:</h3>

@@ -1,11 +1,9 @@
 @extends('app')
 
 @section('content')
-    <h1>Ajouter un torrent</h1>
-    <hr>
 
     {!! Form::open(['url' => 'torrents'])  !!}
-        @include ('torrents.form', ['submitButtonText' => 'Ajouter le torrent'])
+    @include ('torrents.form', ['submitButtonText' => 'Ajouter le torrent','page' => 'create'])
     {!! Form::close() !!}
 
     @include ('errors.list')
